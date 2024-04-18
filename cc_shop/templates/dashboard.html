@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Dashboard</h1>
+    <p class="lead">Welcome to your admin dashboard, where you can manage the application and view detailed analytics.</p>
+
+    <!-- Dashboard Statistics -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Total Sales</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ total_sales }}</h5>
+                    <p class="card-text">Total revenue from all carbon credit sales.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Products Sold</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ products_sold }}</h5>
+                    <p class="card-text">Number of carbon credits sold to date.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Active Users</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ active_users }}</h5>
+                    <p class="card-text">Users actively participating in purchasing and activities.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Purchases -->
+    <div class="card">
+        <div class="card-header">Recent Purchases</div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Product</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for purchase in recent_purchases %}
+                <tr>
+                    <td>{{ purchase.purchase_date }}</td>
+                    <td>{{ purchase.user.username }}</td>
+                    <td>{{ purchase.product.type }}</td>
+                    <td>${{ purchase.product.price }}</td>
+                    <td>{{ purchase.status }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">No recent purchases found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Management Links -->
+    <div class="my-4">
+        <a href="{% url 'manage_products' %}" class="btn btn-info">Manage Products</a>
+        <a href="{% url 'user_management' %}" class="btn btn-secondary">User Management</a>
+    </div>
+</div>
+{% endblock %}

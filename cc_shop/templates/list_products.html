@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Products{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Available Products</h1>
+    <p class="lead">Browse our selection of carbon credits and renewable energy projects to find the right investment for your sustainability goals.</p>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4">
+            <h2>{{ product.type }}</h2>
+            <p>{{ product.description }}</p>
+            <div>
+                <span class="text-muted">Price: ${{ product.price }}</span>
+            </div>
+            <p><a class="btn btn-primary" href="{% url 'product_detail' product.id %}" role="button">View details &raquo;</a></p>
+        </div>
+        {% empty %}
+        <p>No products are currently available. Please check back later.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

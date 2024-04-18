@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.country.country_name }} Details {% endblock %}
+
+{% block content %}
+<div class="py-5 text-center">
+    <h2>{{ product.country.country_name }} Details</h2>
+    <p class="lead">Below you will find detailed information about our carbon credit products, including electric power consumption data and additional metadata for {{ product.country.country_name }}.</p>
+</div>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-header">
+            Basic Information
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ product.country.country_name }}</h5>
+            <p class="card-text">Country Code: {{ product.country.country_code }}</p>
+            <p class="card-text">Long Name: {{ product.country.metadata.long_name }}</p>
+            <p class="card-text">Region: {{ product.country.metadata.region }}</p>
+            <p class="card-text">Currency Unit: {{ product.country.metadata.currency_unit }}</p>
+            <p class="card-text">Income Group: {{ product.country.metadata.income_group }}</p>
+            <p class="card-text">Special Notes: {{ product.country.metadata.special_notes }}</p>
+            <p class="card-text price-highlight"><strong>Price: ${{ product.price }}</strong></p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        {% if electric_data %}
+        <h4 style="text-align:center; padding-top: 20px;">Electric Power Consumption from 1994 to 2014 (kWh per Capita)</h4>
+        <div style="position: relative; height:400px; width:100%;">
+            <canvas id="electricConsumptionChart"></canvas>
+        </div>
+        {% else %}
+        <div class="card-body">
+            <p>No electric power consumption data available.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Buttons for actions -->
+    <div class="text-center mb-4">
+        <!-- Purchase button -->
+        <a href="{% url 'purchase_product' product.id %}" class="btn btn-primary">Purchase Carbon Credits</a>
+        <!-- Back to List button -->
+        <a href="{% url 'list_products' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+{% if electric_data %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('electricConsumptionChart').getContext('2d');
+        var electricConsumptionChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ years|safe }},
+                datasets: [{
+                    label: 'Electric Power Consumption (kWh per Capita, Yearly)',
+                    data: {{ electric_data|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 30,
+                        right: 20
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Electric Power Consumption (kWh per Capita)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: 10
+                        },
+                        beginAtZero: true
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endif %}
+
+{% block additional_styles %}
+<style>
+    .price-highlight {
+        color: #dc3545;
+        font-size: 1.25rem;
+        font-weight: bold;
+        background-color: #fff3cd;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ffeeba;
+    }
+</style>
+{% endblock %}
+
+{% endblock %}

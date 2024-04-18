@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to EpochCraft{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to EpochCraft!</h1>
+    <p class="lead">Helping you invest in a greener future with carbon credits and renewable energy projects.</p>
+    <hr class="my-4">
+    <p>Explore how you can make a difference by offsetting your carbon footprint or supporting renewable energy initiatives across the globe.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'list_products' %}" role="button">Browse Products</a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>What are Carbon Credits?</h2>
+        <p>Carbon credits are a type of tradable certificate or permit that represents the right to emit one tonne of carbon dioxide or the mass of another greenhouse gas with a carbon dioxide equivalent (tCO2e).</p>
+        <p><a class="btn btn-secondary" href="{% url 'about' %}" role="button">Learn more &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Our Impact</h2>
+        <p>See the impact of your purchases and how they contribute to environmental conservation and the fight against climate change.</p>
+        <p><a class="btn btn-secondary" href="{% url 'impact' %}" role="button">View details &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Join Us</h2>
+        <p>Become a part of the global movement towards sustainability by registering with us and starting your journey to carbon neutrality.</p>
+        <p><a class="btn btn-secondary" href="{% url 'register' %}" role="button">Register now &raquo;</a></p>
+    </div>
+</div>
+{% endblock %}

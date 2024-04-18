@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Our Impact{% endblock %}
+
+{% block content %}
+<div class="py-5 text-center">
+    <h2>Our Environmental Impact</h2>
+    <p class="lead">Discover how your contributions through purchasing carbon credits and supporting renewable energy projects are making a real difference.</p>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">CO<sub>2</sub> Emissions Reduced</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ total_co2_reduction }} <small class="text-muted">kg</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Equivalent to the annual carbon footprint of {{ equivalent_cars }} cars.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Trees Planted</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ trees_planted }} <small class="text-muted">trees</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Contributing to reforestation and biodiversity.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Renewable Energy Generated</h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">{{ renewable_energy_mwh }} <small class="text-muted">MWh</small></h1>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li>Powering homes and businesses sustainably.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
