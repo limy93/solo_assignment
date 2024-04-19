@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 # Create your models here.
 
@@ -48,6 +49,10 @@ class Purchase(models.Model):
     purchase_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='Pending')
 
+    @property
+    def total_price(self):
+        return self.quantity * self.product.price
+    
     def __str__(self):
         return f'{self.user.username} purchased {self.quantity} x {self.product.type} for {self.product.country.country_name} at ${self.product.price} each'
 

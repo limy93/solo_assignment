@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1>Available Products</h1>
+    <h1 class="text-center mb-4">Available Products</h1>
     <div class="row">
         {% for product in products %}
         <div class="col-lg-4 col-md-6 mb-4">
@@ -16,11 +16,11 @@
                 </div>
                 <div class="card-footer bg-white">
                     <div class="d-flex flex-row justify-content-around align-items-center">
-                        <a class="btn btn-primary mr-2" href="{% url 'product_detail' product.id %}" style="flex: 1; white-space: normal; text-align: center;">View Details</a>
+                        <a class="btn btn-secondary mr-2" href="{% url 'product_detail' product.id %}" style="flex: 1; text-align: center; padding: 6px 12px; font-size: 0.9rem;">View Details</a>
                         <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-flex align-items-center" style="flex: 2;">
                             {% csrf_token %}
-                            <input type="number" name="quantity" value="1" min="1" max="99" class="form-control mr-2" style="width: 60px; flex-shrink: 1;">
-                            <button type="submit" class="btn btn-success" style="flex-grow: 1;">Add to Cart</button>
+                            <input type="number" name="quantity" value="1" min="1" max="99" class="form-control mr-2" style="width: 60px; flex-shrink: 1; height: 38px; font-size: 0.9rem;">
+                            <button type="submit" class="btn btn-primary" style="flex-grow: 1; padding: 6px 12px; font-size: 0.9rem;">Add to Cart</button>
                         </form>
                     </div>
                 </div>
@@ -29,32 +29,4 @@
         {% endfor %}
     </div>
 </div>
-{% endblock %}
-
-{% block additional_styles %}
-<style>
-    .card-footer .btn, .card-footer .form-control {
-        height: 38px;  // Ensures consistent height across all elements
-    }
-    .card-footer .form-control {
-        flex-shrink: 1;  // Allows the input to shrink but maintains its aspect
-    }
-    .btn-primary {
-        overflow: hidden;  // Prevents text from spilling out
-        text-overflow: ellipsis;  // Adds an ellipsis if the text is too long
-    }
-    @media (max-width: 768px) {
-        .btn-primary, .btn-success {
-            padding: .375rem .75rem;  // Adjusts padding on smaller screens
-            font-size: .8rem;  // Reduces font size to fit smaller screens
-        }
-        .card-footer form {
-            flex-direction: row;  // Keeps the form horizontal on smaller screens
-            align-items: center;  // Ensures vertical alignment is centered
-        }
-        .card-footer .form-control {
-            max-width: none;  // Allows the input to expand fully if needed
-        }
-    }
-</style>
 {% endblock %}

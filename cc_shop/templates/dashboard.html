@@ -10,28 +10,28 @@
     <!-- Dashboard Statistics -->
     <div class="row">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-primary mb-3" style="min-height: 200px;">
                 <div class="card-header">Total Sales</div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ total_sales }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ total_sales }}</h5>
                     <p class="card-text">Total revenue from all carbon credit sales.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success mb-3" style="min-height: 200px;">
                 <div class="card-header">Products Sold</div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ products_sold }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ products_sold }}</h5>
                     <p class="card-text">Number of carbon credits sold to date.</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-warning mb-3">
+            <div class="card text-white bg-warning mb-3" style="min-height: 200px;">
                 <div class="card-header">Active Users</div>
                 <div class="card-body">
-                    <h5 class="card-title">{{ active_users }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ active_users }}</h5>
                     <p class="card-text">Users actively participating in purchasing and activities.</p>
                 </div>
             </div>
@@ -66,11 +66,16 @@
             </tbody>
         </table>
     </div>
-
-    <!-- Management Links -->
-    <div class="my-4">
-        <a href="{% url 'manage_products' %}" class="btn btn-info">Manage Products</a>
-        <a href="{% url 'user_management' %}" class="btn btn-secondary">User Management</a>
-    </div>
 </div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .card-body {
+        padding: 15px; /* Adjusts padding inside the card for tighter content */
+    }
+    .card-title {
+        margin-bottom: 0.25rem; /* Reduces the space between the title and text below it */
+    }
+</style>
 {% endblock %}
