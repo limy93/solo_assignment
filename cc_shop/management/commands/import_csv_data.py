@@ -5,15 +5,15 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from epdata.models import Country, CountryMetadata, ElectricConsumption, Product
+from cc_shop.models import Country, CountryMetadata, ElectricConsumption, Product
 
 class Command(BaseCommand):
     help = 'Automatically imports data and metadata from CSV files in the data folder, clearing previous entries.'
 
     def handle(self, *args, **options):
         base_dir = settings.BASE_DIR
-        data_csv_path = os.path.join(base_dir, 'epdata', 'data', 'epcons_data.csv')
-        metadata_csv_path = os.path.join(base_dir, 'epdata', 'data', 'epcons_metadata.csv')
+        data_csv_path = os.path.join(base_dir, 'cc_shop', 'data', 'epcons_data.csv')
+        metadata_csv_path = os.path.join(base_dir, 'cc_shop', 'data', 'epcons_metadata.csv')
 
         self.stdout.write(self.style.SUCCESS('Clearing existing data...'))
         CountryMetadata.objects.all().delete()

@@ -5,20 +5,56 @@
 {% block content %}
 <div class="container">
     <h1>Available Products</h1>
-    <p class="lead">Browse our selection of carbon credits and renewable energy projects to find the right investment for your sustainability goals.</p>
     <div class="row">
         {% for product in products %}
-        <div class="col-md-4">
-            <h2>{{ product.type }}</h2>
-            <p>{{ product.description }}</p>
-            <div>
-                <span class="text-muted">Price: ${{ product.price }}</span>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 d-flex flex-column">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.type }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <p class="card-text"><strong>Price: ${{ product.price }}</strong></p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-flex flex-row justify-content-around align-items-center">
+                        <a class="btn btn-primary mr-2" href="{% url 'product_detail' product.id %}" style="flex: 1; white-space: normal; text-align: center;">View Details</a>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-flex align-items-center" style="flex: 2;">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="1" min="1" max="99" class="form-control mr-2" style="width: 60px; flex-shrink: 1;">
+                            <button type="submit" class="btn btn-success" style="flex-grow: 1;">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <p><a class="btn btn-primary" href="{% url 'product_detail' product.id %}" role="button">View details &raquo;</a></p>
         </div>
-        {% empty %}
-        <p>No products are currently available. Please check back later.</p>
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .card-footer .btn, .card-footer .form-control {
+        height: 38px;  // Ensures consistent height across all elements
+    }
+    .card-footer .form-control {
+        flex-shrink: 1;  // Allows the input to shrink but maintains its aspect
+    }
+    .btn-primary {
+        overflow: hidden;  // Prevents text from spilling out
+        text-overflow: ellipsis;  // Adds an ellipsis if the text is too long
+    }
+    @media (max-width: 768px) {
+        .btn-primary, .btn-success {
+            padding: .375rem .75rem;  // Adjusts padding on smaller screens
+            font-size: .8rem;  // Reduces font size to fit smaller screens
+        }
+        .card-footer form {
+            flex-direction: row;  // Keeps the form horizontal on smaller screens
+            align-items: center;  // Ensures vertical alignment is centered
+        }
+        .card-footer .form-control {
+            max-width: none;  // Allows the input to expand fully if needed
+        }
+    }
+</style>
 {% endblock %}

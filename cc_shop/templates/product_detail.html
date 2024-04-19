@@ -25,82 +25,83 @@
         </div>
     </div>
 
+    {% if electric_data %}
     <div class="card mb-4">
-        {% if electric_data %}
         <h4 style="text-align:center; padding-top: 20px;">Electric Power Consumption from 1994 to 2014 (kWh per Capita)</h4>
         <div style="position: relative; height:400px; width:100%;">
             <canvas id="electricConsumptionChart"></canvas>
         </div>
-        {% else %}
-        <div class="card-body">
-            <p>No electric power consumption data available.</p>
-        </div>
-        {% endif %}
     </div>
-    
-    <!-- Buttons for actions -->
-    <div class="text-center mb-4">
-        <!-- Purchase button -->
-        <a href="{% url 'purchase_product' product.id %}" class="btn btn-primary">Purchase Carbon Credits</a>
-        <!-- Back to List button -->
-        <a href="{% url 'list_products' %}" class="btn btn-secondary">Back to List</a>
-    </div>
-</div>
-
-{% if electric_data %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var ctx = document.getElementById('electricConsumptionChart').getContext('2d');
-        var electricConsumptionChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: {{ years|safe }},
-                datasets: [{
-                    label: 'Electric Power Consumption (kWh per Capita, Yearly)',
-                    data: {{ electric_data|safe }},
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        left: 30,
-                        right: 20
-                    }
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('electricConsumptionChart').getContext('2d');
+            var electricConsumptionChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ years|safe }},
+                    datasets: [{
+                        label: 'Electric Power Consumption (kWh per Capita, Yearly)',
+                        data: {{ electric_data|safe }},
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
                 },
-                scales: {
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Electric Power Consumption (kWh per Capita)',
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            padding: 10
-                        },
-                        beginAtZero: true
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 30,
+                            right: 20
+                        }
                     },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Year',
-                            font: {
-                                size: 14
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Electric Power Consumption (kWh per Capita)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                padding: 10
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
                 }
-            }
+            });
         });
-    });
-</script>
-{% endif %}
+    </script>
+    {% else %}
+    <div class="card-body">
+        <p>No electric power consumption data available.</p>
+    </div>
+    {% endif %}
+
+    <!-- Add to Cart Form centered below the graph -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6 text-center">
+            <form action="{% url 'add_to_cart' product.id %}" method="post">
+                {% csrf_token %}
+                <label for="quantity" class="form-label">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" class="form-control" style="width: 100px; display: inline-block;">
+                <button type="submit" class="btn btn-success">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% block additional_styles %}
 <style>

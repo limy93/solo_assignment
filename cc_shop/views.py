@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, RegisterForm, ProfileForm  # Assume these forms are defined
-from .models import Product
+from .models import Cart, CartItem, ElectricConsumption, Product, Purchase
 
 # Create your views here.
 
@@ -56,8 +57,16 @@ def list_products(request):
     return render(request, 'list_products.html', {'products': products})
 
 def product_detail(request, product_id):
-    product = Product.objects.get(id=product_id)
-    return render(request, 'product_detail.html', {'product': product})
+    product = get_object_or_404(Product, id=product_id)
+    electric_consumptions = ElectricConsumption.objects.filter(country=product.country).order_by('year')
+    years = [ec.year for ec in electric_consumptions]
+    data = [ec.consumption for ec in electric_consumptions]
+    
+    return render(request, 'product_detail.html', {
+        'product': product,
+        'electric_data': data,
+        'years': years
+    })
 
 def purchase_confirmation(request):
     # Details of what happens after a purchase would be implemented here
@@ -75,3 +84,38 @@ def impact(request):
         'renewable_energy_mwh': renewable_energy_mwh
     }
     return render(request, 'impact.html', context)
+
+@login_required
+def purchase_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'purchase_product.html', {'product': product})
+
+@login_required
+def complete_purchase(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        # Implement your logic for creating a purchase record
+        Purchase.objects.create(
+            user=request.user,
+            product=product,
+            price=product.price,
+            quantity=1,  # Or modify as needed based on form input
+            status='Completed'  # Or start with a different status as per your logic
+        )
+        # Redirect to a new URL: maybe a thank-you page or order details page
+        return redirect('purchase_confirmation')  # Ensure this URL is defined in your urls.py
+    else:
+        return redirect('purchase_product', product_id=product.id)
+    
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    cart, _ = Cart.objects.get_or_create(user=request.user)  # Ensure the user has a cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        cart_item.quantity += 1  # Increment the quantity if the item is already in the cart
+    cart_item.save()
+    return redirect('cart_detail')  # Redirect to a view that shows the cart
+
+def cart_detail(request):
+    cart = get_object_or_404(Cart, user=request.user)  # Get the user's cart
+    return render(request, 'cart_detail.html', {'cart': cart})
