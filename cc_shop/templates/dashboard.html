@@ -42,7 +42,7 @@
             <div class="card bg-warning mb-3 text-white" style="min-height: 200px;">
                 <div class="card-header">Active Users</div>
                 <div class="card-body">
-                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ user_list.count }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ user_total_count }}</h5>
                     <p class="card-text">Users actively participating in activities.</p>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     <th>Date</th>
                     {% if is_admin %}<th>User</th>{% endif %}
                     <th>Product</th>
-                    <th>Quantity</th> <!-- Added Quantity column -->
+                    <th>Quantity</th>
                     <th>Amount</th>
                     <th>Status</th>
                 </tr>
@@ -71,12 +71,12 @@
                     <td>{{ purchase.purchase_date }}</td>
                     {% if is_admin %}<td>{{ purchase.user.username }}</td>{% endif %}
                     <td>{{ purchase.product.country }} EcoCredits</td>
-                    <td>{{ purchase.quantity }}</td> <!-- Displaying the quantity -->
+                    <td>{{ purchase.quantity }}</td>
                     <td>${{ purchase.total_price }}</td>
                     <td>{{ purchase.status }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="7">No recent purchases found.</td></tr> <!-- Update colspan to 6 -->
+                <tr><td colspan="7">No recent purchases found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -87,7 +87,7 @@
         <span class="step-links">
             {% if purchase_page_obj.has_previous %}
                 <a href="?page=1">&laquo; First Page</a>
-                <a href="?page={{ page_obj.previous_page_number }}">Previous Page</a>
+                <a href="?page={{ purchase_page_obj.previous_page_number }}">Previous Page</a>
             {% endif %}
 
             <span class="current">
@@ -95,8 +95,8 @@
             </span>
 
             {% if purchase_page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next Page</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">Last Page &raquo;</a>
+                <a href="?page={{ purchase_page_obj.next_page_number }}">Next Page</a>
+                <a href="?page={{ purchase_page_obj.paginator.num_pages }}">Last Page &raquo;</a>
             {% endif %}
         </span>
     </div>
@@ -104,25 +104,20 @@
     <!-- User management for Admins -->
     <div class="card my-4">
         <div class="card-header">Active Users</div>
-        <table class="table">
+        <table class="table table-active-users">
             <thead>
                 <tr>
-                    <th># of Active Users</th>
+                    <th>#</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in user_page_obj %}
                 <tr>
-                    <th>{{ forloop.counter }}</th>
+                    <td>{{ forloop.counter }}</td>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
-                    <td>
-                        <!-- Example actions -->
-                        <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-danger">Remove</a>
-                    </td>
                 </tr>
                 {% empty %}
                 <tr><td colspan="3">No active users found.</td></tr>
@@ -131,7 +126,7 @@
         </table>
         <!-- Pagination for Active Users -->
         <div class="pagination">
-            <span class="step-links">
+            <span the="step-links">
                 {% if user_page_obj.has_previous %}
                     <a href="?user_page=1">&laquo; First Page</a>
                     <a href="?user_page={{ user_page_obj.previous_page_number }}">Previous Page</a>
@@ -160,6 +155,13 @@
     }
     .card-title {
         margin-bottom: 0.25rem;
+    }
+    /* Additional styles for uniform column widths in the Active Users table */
+    .table-active-users th, .table-active-users td {
+        width: 33.33%; /* Distributes the width evenly across the three columns */
+        text-align: center; /* Optional: Center-align the text to improve readability */
+        padding: 8px; /* Adjust padding to ensure columns are equally spaced */
+        box-sizing: border-box; /* Ensures that padding and border are included in the width */
     }
 </style>
 {% endblock %}

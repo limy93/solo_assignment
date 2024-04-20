@@ -9,7 +9,7 @@ from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from datetime import datetime
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 
@@ -205,59 +205,44 @@ def remove_from_cart(request, item_id):
 @login_required
 def dashboard(request):
     context = {}
+    purchase_list = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')
+    purchase_paginator = Paginator(purchase_list, 5)  # Show 5 purchases per page
+
+    try:
+        purchase_page_number = request.GET.get('page', 1)
+        purchase_page_obj = purchase_paginator.get_page(purchase_page_number)
+    except (PageNotAnInteger, EmptyPage):
+        purchase_page_obj = purchase_paginator.get_page(1)
+
+    context['purchase_page_obj'] = purchase_page_obj
 
     if request.user.is_superuser:
-        # Data for admin
-        # Aggregate total revenue and total products sold
+        # Aggregate data for total revenue and total products sold
         total_sales_data = Purchase.objects.aggregate(
             total_revenue=Sum(F('product__price') * F('quantity'))
         )
-        total_sales = total_sales_data.get('total_revenue', 0)  # Ensure there's a default of 0
+        total_sales = total_sales_data.get('total_revenue', 0)  # Default to 0 if None
         products_sold = Purchase.objects.aggregate(total_sold=Sum('quantity'))['total_sold'] or 0
         
-        # Pagination for recent purchases
-        purchase_list = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')
-        purchase_paginator = Paginator(purchase_list, 5)  # Show 5 purchases per page
-        purchase_page_number = request.GET.get('page')
-        purchase_page_obj = purchase_paginator.get_page(purchase_page_number)
-
-        # Pagination for active users
-        user_list = User.objects.filter(is_active=True)
+        # User data and pagination
+        user_list = User.objects.filter(is_active=True).order_by('username')
         user_paginator = Paginator(user_list, 5)  # Adjust the number per page as needed
-        user_page_number = request.GET.get('user_page')  # Use a different parameter for user pages
-        user_page_obj = user_paginator.get_page(user_page_number)
+        user_page_number = request.GET.get('user_page', 1)
 
+        try:
+            user_page_obj = user_paginator.get_page(user_page_number)
+        except (PageNotAnInteger, EmptyPage):
+            user_page_obj = user_paginator.get_page(1)
+        
         context.update({
             'total_sales': total_sales,
             'products_sold': products_sold,
             'user_page_obj': user_page_obj,
-            'purchase_page_obj': purchase_page_obj,  # Paginated purchases
+            'user_total_count': user_list.count(),  # Total count of active users
             'is_admin': True
         })
-
-        # Handle delete user request
-        if request.method == 'POST' and 'delete_user' in request.POST:
-            user_id = request.POST.get('delete_user')
-            try:
-                user_to_delete = User.objects.get(pk=user_id)
-                user_to_delete.delete()
-                messages.success(request, f"User {user_to_delete.username} has been deleted.")
-                return redirect('dashboard')
-            except User.DoesNotExist:
-                messages.error(request, "User not found.")
-                return redirect('dashboard')
-
     else:
-        # Data for regular user
-        purchase_list = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')
-        paginator = Paginator(purchase_list, 5)  # Show 5 purchases per page
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        context.update({
-            'purchase_page_obj': purchase_page_obj, 
-            'is_admin': False
-        })
+        context['is_admin'] = False
 
     return render(request, 'dashboard.html', context)
 
