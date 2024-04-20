@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-4">
     <h2 class="text-center mb-4">Payment Details</h2>
-    <form method="post" action="{% url 'payment_status' %}" class="mb-3">
+    <form method="post" action="{% url 'make_payment' %}" class="mb-3">
         {% csrf_token %}
         <div class="form-group">
             <label for="cardName">Name on Card</label>

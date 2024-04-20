@@ -6,15 +6,12 @@
 <div class="container mt-4">
     <h2 class="text-center mb-4">Payment Status</h2>
     <div class="text-center">
-        {% if payment_successful %}
-            <h3 class="text-success">Thank You!</h3>
-            <p class="lead">Your payment has been successfully processed.</p>
-            <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
-        {% else %}
-            <h3 class="text-danger">Payment Failed</h3>
-            <p class="lead">Unfortunately, there was an issue processing your payment. Please try again.</p>
-            <a href="{% url 'make_payment' %}" class="btn btn-primary">Try Again</a>
+        {% if messages %}
+            {% for message in messages %}
+                <h3 class="{% if message.tags %}text-success{% else %}text-danger{% endif %}">{{ message }}</h3>
+            {% endfor %}
         {% endif %}
+        <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
     </div>
 </div>
 {% endblock %}

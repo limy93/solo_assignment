@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from datetime import datetime
+from django.contrib import messages
 
 # Create your views here.
 
@@ -65,22 +66,53 @@ def product_detail(request, product_id):
 
     return render(request, 'product_detail.html', context)
 
+@login_required
 def make_payment(request):
     if request.method == 'POST':
-        # Validate and process payment details here
-        # For now, let's assume it's a placeholder that always succeeds
-        payment_successful = True  # You would have logic here to determine this
-        request.session['payment_successful'] = payment_successful
-        return redirect('payment_status')
+        # Collect payment information from the form
+        card_name = request.POST.get('cardName')
+        card_number = request.POST.get('cardNumber')
+        card_expiry = request.POST.get('cardExpiry')
+        card_cvv = request.POST.get('cardCVV')
+
+        # Validate payment information format
+        if len(card_number) == 16 and card_cvv.isdigit() and len(card_cvv) == 3:
+            # Simulate payment success
+            cart = Cart.objects.get(user=request.user)
+            for item in cart.items.all():
+                Purchase.objects.create(
+                    user=request.user,
+                    product=item.product,
+                    quantity=item.quantity,
+                    status='Completed'
+                )
+                item.delete()  # Clear cart items after purchase
+
+            messages.success(request, "Payment successful!")
+            return redirect('payment_status')
+        else:
+            messages.error(request, "Invalid payment details. Please check your input and try again.")
+            return redirect('make_payment')
     else:
         return render(request, 'make_payment.html')
-
+    
 def payment_status(request):
     # Retrieve payment result from session
     payment_successful = request.session.get('payment_successful', False)  # Defaults to False if not found
-    context = {
-        'payment_successful': payment_successful
-    }
+
+    if payment_successful:
+        # Get the purchase details
+        purchases = Purchase.objects.filter(user=request.user, status='Completed')
+
+        context = {
+            'payment_successful': payment_successful,
+            'purchases': purchases
+        }
+    else:
+        context = {
+            'payment_successful': payment_successful
+        }
+
     return render(request, 'payment_status.html', context)
     
 def impact(request):
@@ -171,21 +203,19 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def dashboard(request):
-    # Calculate total sales by summing up the product of price and quantity for all purchases
+    # Aggregate total revenue and total products sold
     total_sales = Purchase.objects.aggregate(total_revenue=Sum(F('product__price') * F('quantity')))
-
-    # Count the total number of products sold
     products_sold = Purchase.objects.aggregate(total_sold=Sum('quantity'))
 
-    # Count active users (example: users who have logged in within the last 30 days)
+    # Count active users based on a condition
     active_users = User.objects.filter(last_login__gte=timezone.now() - timezone.timedelta(days=30)).count()
 
-    # Get recent purchases
-    recent_purchases = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')[:10]
+    # Fetch the 10 most recent purchases for the current user or globally
+    recent_purchases = Purchase.objects.filter(user=request.user).order_by('-purchase_date')[:10]
 
     context = {
-        'total_sales': total_sales['total_revenue'],
-        'products_sold': products_sold['total_sold'],
+        'total_sales': total_sales['total_revenue'] or 0,
+        'products_sold': products_sold['total_sold'] or 0,
         'active_users': active_users,
         'recent_purchases': recent_purchases,
     }

@@ -13,7 +13,7 @@
             <div class="card text-white bg-primary mb-3" style="min-height: 200px;">
                 <div class="card-header">Total Sales</div>
                 <div class="card-body">
-                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ total_sales }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">${{ total_sales|floatformat:2 }}</h5>
                     <p class="card-text">Total revenue from all carbon credit sales.</p>
                 </div>
             </div>
@@ -56,8 +56,8 @@
                 <tr>
                     <td>{{ purchase.purchase_date }}</td>
                     <td>{{ purchase.user.username }}</td>
-                    <td>{{ purchase.product.type }}</td>
-                    <td>${{ purchase.product.price }}</td>
+                    <td>{{ purchase.product.country }} EcoCredits</td>
+                    <td>${{ purchase.total_price }}</td>
                     <td>{{ purchase.status }}</td>
                 </tr>
                 {% empty %}
