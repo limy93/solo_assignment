@@ -42,7 +42,7 @@
             <div class="card bg-warning mb-3 text-white" style="min-height: 200px;">
                 <div class="card-header">Active Users</div>
                 <div class="card-body">
-                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ active_users.count }}</h5>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ user_list.count }}</h5>
                     <p class="card-text">Users actively participating in activities.</p>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for purchase in recent_purchases %}
+                {% for purchase in purchase_page_obj %}
                 <tr>
                     <th>{{ forloop.counter }}</th>
                     <td>{{ purchase.purchase_date }}</td>
@@ -76,10 +76,29 @@
                     <td>{{ purchase.status }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6">No recent purchases found.</td></tr> <!-- Update colspan to 6 -->
+                <tr><td colspan="7">No recent purchases found.</td></tr> <!-- Update colspan to 6 -->
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if purchase_page_obj.has_previous %}
+                <a href="?page=1">&laquo; First Page</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Previous Page</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ purchase_page_obj.number }} of {{ purchase_page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if purchase_page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next Page</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Last Page &raquo;</a>
+            {% endif %}
+        </span>
     </div>
 
     <!-- User management for Admins -->
@@ -95,7 +114,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in active_users %}
+                {% for user in user_page_obj %}
                 <tr>
                     <th>{{ forloop.counter }}</th>
                     <td>{{ user.username }}</td>
@@ -110,6 +129,24 @@
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Pagination for Active Users -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if user_page_obj.has_previous %}
+                    <a href="?user_page=1">&laquo; First Page</a>
+                    <a href="?user_page={{ user_page_obj.previous_page_number }}">Previous Page</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ user_page_obj.number }} of {{ user_page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if user_page_obj.has_next %}
+                    <a href="?user_page={{ user_page_obj.next_page_number }}">Next Page</a>
+                    <a href="?user_page={{ user_page_obj.paginator.num_pages }}">Last Page &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     </div>
     {% endif %}
 

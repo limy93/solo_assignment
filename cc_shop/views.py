@@ -9,6 +9,7 @@ from django.http import HttpResponse, Http404
 from django.urls import reverse_lazy
 from datetime import datetime
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -213,14 +214,24 @@ def dashboard(request):
         )
         total_sales = total_sales_data.get('total_revenue', 0)  # Ensure there's a default of 0
         products_sold = Purchase.objects.aggregate(total_sold=Sum('quantity'))['total_sold'] or 0
-        active_users = User.objects.filter(is_active=True)
-        recent_purchases = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')[:10]
+        
+        # Pagination for recent purchases
+        purchase_list = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')
+        purchase_paginator = Paginator(purchase_list, 5)  # Show 5 purchases per page
+        purchase_page_number = request.GET.get('page')
+        purchase_page_obj = purchase_paginator.get_page(purchase_page_number)
+
+        # Pagination for active users
+        user_list = User.objects.filter(is_active=True)
+        user_paginator = Paginator(user_list, 5)  # Adjust the number per page as needed
+        user_page_number = request.GET.get('user_page')  # Use a different parameter for user pages
+        user_page_obj = user_paginator.get_page(user_page_number)
 
         context.update({
             'total_sales': total_sales,
             'products_sold': products_sold,
-            'active_users': active_users,
-            'recent_purchases': recent_purchases,
+            'user_page_obj': user_page_obj,
+            'purchase_page_obj': purchase_page_obj,  # Paginated purchases
             'is_admin': True
         })
 
@@ -238,10 +249,13 @@ def dashboard(request):
 
     else:
         # Data for regular user
-        recent_purchases = Purchase.objects.filter(user=request.user).select_related('product').order_by('-purchase_date')[:10]
+        purchase_list = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')
+        paginator = Paginator(purchase_list, 5)  # Show 5 purchases per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context.update({
-            'recent_purchases': recent_purchases,
+            'purchase_page_obj': purchase_page_obj, 
             'is_admin': False
         })
 
