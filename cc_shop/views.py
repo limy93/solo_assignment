@@ -203,22 +203,47 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def dashboard(request):
-    # Aggregate total revenue and total products sold
-    total_sales = Purchase.objects.aggregate(total_revenue=Sum(F('product__price') * F('quantity')))
-    products_sold = Purchase.objects.aggregate(total_sold=Sum('quantity'))
+    context = {}
 
-    # Count active users based on a condition
-    active_users = User.objects.filter(last_login__gte=timezone.now() - timezone.timedelta(days=30)).count()
+    if request.user.is_superuser:
+        # Data for admin
+        # Aggregate total revenue and total products sold
+        total_sales_data = Purchase.objects.aggregate(
+            total_revenue=Sum(F('product__price') * F('quantity'))
+        )
+        total_sales = total_sales_data.get('total_revenue', 0)  # Ensure there's a default of 0
+        products_sold = Purchase.objects.aggregate(total_sold=Sum('quantity'))['total_sold'] or 0
+        active_users = User.objects.filter(is_active=True)
+        recent_purchases = Purchase.objects.select_related('user', 'product').order_by('-purchase_date')[:10]
 
-    # Fetch the 10 most recent purchases for the current user or globally
-    recent_purchases = Purchase.objects.filter(user=request.user).order_by('-purchase_date')[:10]
+        context.update({
+            'total_sales': total_sales,
+            'products_sold': products_sold,
+            'active_users': active_users,
+            'recent_purchases': recent_purchases,
+            'is_admin': True
+        })
 
-    context = {
-        'total_sales': total_sales['total_revenue'] or 0,
-        'products_sold': products_sold['total_sold'] or 0,
-        'active_users': active_users,
-        'recent_purchases': recent_purchases,
-    }
+        # Handle delete user request
+        if request.method == 'POST' and 'delete_user' in request.POST:
+            user_id = request.POST.get('delete_user')
+            try:
+                user_to_delete = User.objects.get(pk=user_id)
+                user_to_delete.delete()
+                messages.success(request, f"User {user_to_delete.username} has been deleted.")
+                return redirect('dashboard')
+            except User.DoesNotExist:
+                messages.error(request, "User not found.")
+                return redirect('dashboard')
+
+    else:
+        # Data for regular user
+        recent_purchases = Purchase.objects.filter(user=request.user).select_related('product').order_by('-purchase_date')[:10]
+
+        context.update({
+            'recent_purchases': recent_purchases,
+            'is_admin': False
+        })
 
     return render(request, 'dashboard.html', context)
 
@@ -231,3 +256,10 @@ def checkout(request):
         return redirect('make_payment')
     else:
         return render(request, 'checkout.html', {'cart': cart})
+
+@login_required
+def delete_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.delete()
+    messages.success(request, 'User successfully deleted.')
+    return redirect('dashboard')

@@ -25,6 +25,7 @@ urlpatterns = [
     path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('logout_page/', views.logout_page, name='logout_page'),
     path('checkout/', views.checkout, name='checkout'),
+    path('user/delete/<int:user_id>/', views.delete_user, name='delete_user'),
     # Password reset URLs
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),

@@ -1,20 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin Dashboard{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Dashboard</h1>
-    <p class="lead">Welcome to your admin dashboard, where you can manage the application and view detailed analytics.</p>
-
-    <!-- Dashboard Statistics -->
+    <h1 class="text-center mb-4">
+        {% if is_admin %}
+            Admin Dashboard
+        {% else %}
+            Your Dashboard
+        {% endif %}
+    </h1>
+    <p class="lead">
+        {% if is_admin %}
+            Welcome to your Admin Dashboard, where you can manage sales data, user activities, and view detailed analytics.
+        {% else %}
+            Welcome to your dashboard, where you can view your recent activity and account details.
+        {% endif %}
+    </p>
+    
+    {% if is_admin %}
+    <!-- Dashboard Statistics for Admins -->
     <div class="row">
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-3" style="min-height: 200px;">
                 <div class="card-header">Total Sales</div>
                 <div class="card-body">
                     <h5 class="card-title" style="margin-bottom: 0.25rem;">${{ total_sales|floatformat:2 }}</h5>
-                    <p class="card-text">Total revenue from all carbon credit sales.</p>
+                    <p class="card-text">Total revenue from all sales.</p>
                 </div>
             </div>
         </div>
@@ -23,7 +34,7 @@
                 <div class="card-header">Products Sold</div>
                 <div class="card-body">
                     <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ products_sold }}</h5>
-                    <p class="card-text">Number of carbon credits sold to date.</p>
+                    <p class="card-text">Number of products sold to date.</p>
                 </div>
             </div>
         </div>
@@ -31,22 +42,24 @@
             <div class="card bg-warning mb-3 text-white" style="min-height: 200px;">
                 <div class="card-header">Active Users</div>
                 <div class="card-body">
-                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ active_users }}</h5>
-                    <p class="card-text">Users actively participating in purchasing and activities.</p>
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ active_users.count }}</h5>
+                    <p class="card-text">Users actively participating in activities.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Purchases -->
+    <!-- Recent Purchases for both Admins and Regular Users -->
     <div class="card">
         <div class="card-header">Recent Purchases</div>
         <table class="table table-hover">
             <thead>
                 <tr>
+                    <th># of Purchases</th>
                     <th>Date</th>
-                    <th>User</th>
+                    {% if is_admin %}<th>User</th>{% endif %}
                     <th>Product</th>
+                    <th>Quantity</th> <!-- Added Quantity column -->
                     <th>Amount</th>
                     <th>Status</th>
                 </tr>
@@ -54,28 +67,62 @@
             <tbody>
                 {% for purchase in recent_purchases %}
                 <tr>
+                    <th>{{ forloop.counter }}</th>
                     <td>{{ purchase.purchase_date }}</td>
-                    <td>{{ purchase.user.username }}</td>
+                    {% if is_admin %}<td>{{ purchase.user.username }}</td>{% endif %}
                     <td>{{ purchase.product.country }} EcoCredits</td>
+                    <td>{{ purchase.quantity }}</td> <!-- Displaying the quantity -->
                     <td>${{ purchase.total_price }}</td>
                     <td>{{ purchase.status }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="5">No recent purchases found.</td></tr>
+                <tr><td colspan="6">No recent purchases found.</td></tr> <!-- Update colspan to 6 -->
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    <!-- User management for Admins -->
+    <div class="card my-4">
+        <div class="card-header">Active Users</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th># of Active Users</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in active_users %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <!-- Example actions -->
+                        <a href="{% url 'delete_user' user.id %}" class="btn btn-sm btn-danger">Remove</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3">No active users found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}
 
 {% block additional_styles %}
 <style>
     .card-body {
-        padding: 15px; /* Adjusts padding inside the card for tighter content */
+        padding: 15px;
     }
     .card-title {
-        margin-bottom: 0.25rem; /* Reduces the space between the title and text below it */
+        margin-bottom: 0.25rem;
     }
 </style>
 {% endblock %}
