@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load custom_filters %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Update Your Cart</h2>
+    <form action="{% url 'update_cart' %}" method="post">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price (Unit)</th>
+                            <th>Total Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart.items.all %}
+                        <tr>
+                            <td>{{ item.product.country }} EcoCredits</td>
+                            <td>
+                                <input type="number" name="quantity-{{ item.id }}" value="{{ item.quantity }}" min="0" class="form-control">
+                            </td>
+                            <td>${{ item.product.price }}</td>
+                            <td>${{ item.quantity|multiply:item.product.price }}</td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="submit" formaction="{% url 'remove_from_cart' item.id %}" class="btn btn-danger">Remove</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn btn-success">Save Changes</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

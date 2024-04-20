@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Browse Products{% endblock %}
+{% block title %}Browse EcoCredits{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="text-center mb-4">Available Products</h1>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Available EcoCredits</h1>
     <div class="row">
         {% for product in products %}
         <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 d-flex flex-column">
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.type }}</h5>
-                    <p class="card-text">{{ product.description }}</p>
-                    <p class="card-text"><strong>Price: ${{ product.price }}</strong></p>
+            <!-- Adjusted card style with a consistent height and padding -->
+            <div class="card h-100 bg-light">
+                <div class="card-body" style="padding: 15px;">
+                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ product.country }} EcoCredits</h5>
+                    <p class="card-text">Price: ${{ product.price }}</p>
                 </div>
                 <div class="card-footer bg-white">
                     <div class="d-flex flex-row justify-content-around align-items-center">
@@ -29,4 +29,15 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .card-body {
+        padding: 15px; /* Consistent padding from dashboard */
+    }
+    .card-title {
+        margin-bottom: 0.25rem; /* Consistent margin from dashboard */
+    }
+</style>
 {% endblock %}

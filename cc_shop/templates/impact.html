@@ -3,52 +3,57 @@
 {% block title %}Our Impact{% endblock %}
 
 {% block content %}
-<div class="py-5 text-center">
-    <h2>Our Environmental Impact</h2>
-    <p class="lead">Discover how your contributions through purchasing carbon credits and supporting renewable energy projects are making a real difference.</p>
-</div>
+<div class="container mt-4">
+    <div class="py-5 text-center">
+        <h2>Our Environmental Impact</h2>
+        <p class="lead">See the tangible changes your EcoCredits bring to the planet, emphasizing sustainability and positive environmental shifts.</p>
+    </div>
 
-<div class="container">
-    <div class="row text-center">
+    <div class="row">
         <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">CO<sub>2</sub> Emissions Reduced</h4>
-                </div>
+            <div class="card text-white bg-primary mb-3" style="min-height: 200px;">
+                <div class="card-header">CO<sub>2</sub> Emissions Offset</div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{ total_co2_reduction }} <small class="text-muted">kg</small></h1>
+                    <h1 class="card-title" style="margin-bottom: 0.25rem;">{{ total_co2_reduction }} <small class="text-muted">kg</small></h1>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>Equivalent to the annual carbon footprint of {{ equivalent_cars }} cars.</li>
+                        <li>This reduction is comparable to removing {{ equivalent_cars }} cars from the road for a year.</li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Trees Planted</h4>
-                </div>
+            <div class="card text-white bg-success mb-3" style="min-height: 200px;">
+                <div class="card-header">Global Reforestation Contribution</div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{ trees_planted }} <small class="text-muted">trees</small></h1>
+                    <h1 class="card-title" style="margin-bottom: 0.25rem;">{{ trees_planted }} <small class="text-muted">trees</small></h1>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>Contributing to reforestation and biodiversity.</li>
+                        <li>Your support aids in expanding global forest cover, enhancing ecosystems and biodiversity.</li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Renewable Energy Generated</h4>
-                </div>
+            <div class="card text-white bg-warning mb-3" style="min-height: 200px;">
+                <div class="card-header">Energy from Renewable Sources</div>
                 <div class="card-body">
-                    <h1 class="card-title pricing-card-title">{{ renewable_energy_mwh }} <small class="text-muted">MWh</small></h1>
+                    <h1 class="card-title" style="margin-bottom: 0.25rem;">{{ renewable_energy_mwh }} <small class="text-muted">MWh</small></h1>
                     <ul class="list-unstyled mt-3 mb-4">
-                        <li>Powering homes and businesses sustainably.</li>
+                        <li>Enough to power thousands of households sustainably, reducing reliance on fossil fuels.</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block additional_styles %}
+<style>
+    .card-body {
+        padding: 15px; /* Adjusts padding inside the card for tighter content */
+    }
+    .card-title {
+        margin-bottom: 0.25rem; /* Reduces the space between the title and text below it */
+    }
+</style>
 {% endblock %}

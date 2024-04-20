@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Payment Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Payment Details</h2>
+    <form method="post" action="{% url 'payment_status' %}" class="mb-3">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="cardName">Name on Card</label>
+            <input type="text" id="cardName" name="cardName" class="form-control" required pattern="[A-Za-z ]+" title="Only letters and spaces are allowed">
+        </div>
+        <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" name="cardNumber" class="form-control" required pattern="\d{16}" title="Card number must be 16 digits">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="cardExpiry">Expiry Date</label>
+                <input type="month" id="cardExpiry" name="cardExpiry" class="form-control" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="cardCVV">CVV</label>
+                <input type="text" id="cardCVV" name="cardCVV" class="form-control" required pattern="\d{3}" title="CVV must be 3 digits">
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-primary" style="width: auto;">Submit Payment</button>
+        </div>
+    </form>
+    <div class="text-center">
+        <a href="{% url 'cart_detail' %}" class="btn btn-secondary" style="width: auto;">Back to Shopping Cart</a>
+    </div>
+</div>
+{% endblock %}

@@ -3,29 +3,44 @@
 {% block title %}Welcome to EpochCraft{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to EpochCraft!</h1>
-    <p class="lead">Helping you invest in a greener future with carbon credits and renewable energy projects.</p>
-    <hr class="my-4">
-    <p>Explore how you can make a difference by offsetting your carbon footprint or supporting renewable energy initiatives across the globe.</p>
-    <a class="btn btn-primary btn-lg" href="{% url 'list_products' %}" role="button">Browse Products</a>
-</div>
+<div class="container mt-4">
+    <div class="jumbotron bg-light">
+        <h1 class="display-4">Welcome to EpochCraft!</h1>
+        <p class="lead">Invest in a sustainable future by purchasing EcoCredits tied to global energy savings.</p>
+        <hr class="my-4">
+        <p>Join us in supporting renewable energy initiatives and reducing carbon emissions around the world. Each EcoCredit you purchase helps fund energy projects that are making a real difference.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'list_products' %}" role="button">Browse EcoCredits</a>
+    </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>What are Carbon Credits?</h2>
-        <p>Carbon credits are a type of tradable certificate or permit that represents the right to emit one tonne of carbon dioxide or the mass of another greenhouse gas with a carbon dioxide equivalent (tCO2e).</p>
-        <p><a class="btn btn-secondary" href="{% url 'about' %}" role="button">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Our Impact</h2>
-        <p>See the impact of your purchases and how they contribute to environmental conservation and the fight against climate change.</p>
-        <p><a class="btn btn-secondary" href="{% url 'impact' %}" role="button">View details &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Join Us</h2>
-        <p>Become a part of the global movement towards sustainability by registering with us and starting your journey to carbon neutrality.</p>
-        <p><a class="btn btn-secondary" href="{% url 'register' %}" role="button">Register now &raquo;</a></p>
+    <div class="row">
+        <!-- Following card styles from dashboard for consistency -->
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2>What are EcoCredits?</h2>
+                    <p>EcoCredits represent a measurable reduction in energy consumption or carbon emissions. Each credit is linked to specific energy-saving projects across various countries, contributing directly to their environmental goals.</p>
+                    <p><a class="btn btn-secondary" href="{% url 'about' %}" role="button">Learn More &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2>Our Impact</h2>
+                    <p>Discover how the EcoCredits you purchase contribute to significant environmental improvements, from reducing greenhouse gases to supporting renewable energy advancements.</p>
+                    <p><a class="btn btn-secondary" href="{% url 'impact' %}" role="button">View Details &raquo;</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2>Join Our Community</h2>
+                    <p>By registering with us, you become part of a global movement towards energy efficiency and sustainability. Start your journey towards making a lasting impact today!</p>
+                    <p><a class="btn btn-secondary" href="{% url 'register' %}" role="button">Register Now &raquo;</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

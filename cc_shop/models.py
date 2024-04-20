@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
@@ -33,7 +34,6 @@ class CountryMetadata(models.Model):
         return f"Metadata for {self.country.country_name}"
 
 class Product(models.Model):
-    description = models.TextField()
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name='products')
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
