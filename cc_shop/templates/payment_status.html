@@ -3,15 +3,24 @@
 {% block title %}Payment Status{% endblock %}
 
 {% block content %}
+
+<style>
+    .container .text-center > * {
+        margin-bottom: 30px;
+    }
+</style>
+
 <div class="container mt-4">
     <h2 class="text-center mb-4">Payment Status</h2>
     <div class="text-center">
         {% if messages %}
             {% for message in messages %}
-                <h3 class="{% if message.tags %}text-success{% else %}text-danger{% endif %}">{{ message }}</h3>
+                <h4 class="{% if message.tags %}text-success{% else %}text-danger{% endif %}">{{ message }}</h4>
             {% endfor %}
         {% endif %}
-        <a href="{% url 'home' %}" class="btn btn-primary">Return Home</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">View Purchases</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back to Home</a>
     </div>
 </div>
+
 {% endblock %}

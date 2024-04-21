@@ -3,24 +3,26 @@
 {% block title %}Edit Product{% endblock %}
 
 {% block content %}
+
 <div class="container mt-4">
     <div class="card mb-4 shadow">
         <div class="card-header text-center">
             <h2>Edit Product</h2>
         </div>
         <div class="card-body">
-            <form method="post">
+            <form id="productForm" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
             </form>
         </div>
         <div class="card-footer text-center bg-light">
             <div class="d-flex justify-content-center align-items-center">
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Back to Admin Dashboard</a>
-                <div style="width: 10px;"></div> <!-- Adding small space for separation -->
-                <button type="submit" form="productForm" class="btn btn-primary">Update</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Back to Dashboard</a>
+                <div style="width: 10px;"></div>
+                <button type="submit" form="productForm" class="btn btn-primary">Update Product</button>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

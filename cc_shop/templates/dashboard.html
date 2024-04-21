@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="container mt-4">
     <h1 class="text-center mb-4">
         {% if is_admin %}
@@ -17,8 +18,8 @@
         {% endif %}
     </p>
     
-    {% if is_admin %}
     <!-- Dashboard Statistics for Admins -->
+    {% if is_admin %}
     <div class="row">
         <div class="col-md-4">
             <div class="card text-white bg-primary mb-3" style="min-height: 200px;">
@@ -57,6 +58,7 @@
             <a href="{% url 'add_product' %}" class="btn btn-success">Add Product</a>
         </div>
     </div>
+    {% endif %}
 
     <!-- Recent Purchases for both Admins and Regular Users -->
     <div class="card">
@@ -64,7 +66,7 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th># of Purchases</th>
+                    <th>#</th>
                     <th>Date</th>
                     {% if is_admin %}<th>User</th>{% endif %}
                     <th>Product</th>
@@ -76,7 +78,7 @@
             <tbody>
                 {% for purchase in purchase_page_obj %}
                 <tr>
-                    <th>{{ forloop.counter }}</th>
+                    <td>{{ forloop.counter0|add:purchase_start_index }}</td>
                     <td>{{ purchase.purchase_date }}</td>
                     {% if is_admin %}<td>{{ purchase.user.username }}</td>{% endif %}
                     <td>{{ purchase.product.country }} EcoCredits</td>
@@ -85,32 +87,33 @@
                     <td>{{ purchase.status }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="7">No recent purchases found.</td></tr>
+                <tr><td colspan="{% if is_admin %}7{% else %}6{% endif %}">No recent purchases found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <!-- Pagination controls -->
+    <!-- Pagination for Recent Purchases -->
     <div class="pagination">
         <span class="step-links">
-            {% if purchase_page_obj.has_previous %}
-                <a href="?page=1">&laquo; First</a>
-                <a href="?page={{ purchase_page_obj.previous_page_number }}">Previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ purchase_page_obj.number }} of {{ purchase_page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if purchase_page_obj.has_next %}
-                <a href="?page={{ purchase_page_obj.next_page_number }}">Next</a>
-                <a href="?page={{ purchase_page_obj.paginator.num_pages }}">Last &raquo;</a>
-            {% endif %}
+            {% with purchase_page_obj.number as current_page and purchase_page_obj.paginator.num_pages as total_pages %}
+                {% if current_page > 1 %}
+                    <a href="?page=1">&laquo; First</a>
+                    <a href="?page={{ current_page|add:-1 }}">Previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ current_page }} of {{ total_pages }}.
+                </span>
+                {% if current_page < total_pages %}
+                    <a href="?page={{ current_page|add:1 }}">Next</a>
+                    <a href="?page={{ total_pages }}">Last &raquo;</a>
+                {% endif %}
+            {% endwith %}
         </span>
     </div>
 
-    <!-- User management for Admins -->
+    <!-- User Management for Admins -->
+    {% if is_admin %}
     <div class="card my-4">
         <div class="card-header">Active Users</div>
         <table class="table table-active-users">
@@ -124,20 +127,22 @@
             <tbody>
                 {% for user in user_page_obj %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
+                    <td>{{ forloop.counter0|add:user_start_index }}</td>
+                    </th>
                     <td>{{ user.username }}</td>
                     <td>{{ user.email }}</td>
                 </tr>
                 {% empty %}
                 <tr><td colspan="3">No active users found.</td></tr>
-                {% endfor %}
+                {% endfor %} 
             </tbody>
         </table>
+
         <!-- Pagination for Active Users -->
         <div class="pagination">
             <span the="step-links">
                 {% if user_page_obj.has_previous %}
-                    <a href="?user_page=1">&laquo; First Page</a>
+                    <a href="?user_page=1">&laquo; First</a>
                     <a href="?user_page={{ user_page_obj.previous_page_number }}">Previous</a>
                 {% endif %}
 
@@ -153,8 +158,9 @@
         </div>
     </div>
     {% endif %}
-
+    
 </div>
+
 {% endblock %}
 
 {% block additional_styles %}
@@ -165,12 +171,11 @@
     .card-title {
         margin-bottom: 0.25rem;
     }
-    /* Additional styles for uniform column widths in the Active Users table */
     .table-active-users th, .table-active-users td {
-        width: 33.33%; /* Distributes the width evenly across the three columns */
-        text-align: center; /* Optional: Center-align the text to improve readability */
-        padding: 8px; /* Adjust padding to ensure columns are equally spaced */
-        box-sizing: border-box; /* Ensures that padding and border are included in the width */
+        width: 33.33%;
+        text-align: center;
+        padding: 8px;
+        box-sizing: border-box;
     }
 </style>
 {% endblock %}

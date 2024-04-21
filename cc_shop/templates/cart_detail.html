@@ -4,8 +4,9 @@
 {% load cart_tags %}
 
 {% block content %}
+
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Your Shopping Cart</h2>
+    <h1 class="text-center mb-4">Your Shopping Cart</h1>
     {% if cart.items.all %}
         <div class="card">
             <div class="card-body">
@@ -55,4 +56,5 @@
         </div>
     {% endif %}
 </div>
+
 {% endblock %}

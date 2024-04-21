@@ -3,10 +3,20 @@
 {% block title %}Logged Out{% endblock %}
 
 {% block content %}
-<div class="py-5 text-center">
-    <h2>You have been logged out</h2>
-    <p class="lead">Thank you for visiting. You have been successfully logged out of your account.</p>
-    <a href="{% url 'home' %}" class="btn btn-primary">Return to Home Page</a>
-    <a href="{% url 'login' %}" class="btn btn-secondary">Login Again</a>
+
+<style>
+    .container .text-center > * {
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">You have been logged out!</h2>
+    <div class="text-center">
+        <p class="lead">Thank you for visiting. You have been successfully logged out of your account.</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">Back to Home</a>
+        <a href="{% url 'login' %}" class="btn btn-secondary">Login Again</a>
+    </div>
 </div>
+
 {% endblock %}

@@ -1,14 +1,14 @@
 import csv
 import os
 import random
+from cc_shop.models import Country, CountryMetadata, ElectricConsumption, Product
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from cc_shop.models import Country, CountryMetadata, ElectricConsumption, Product
 
 class Command(BaseCommand):
-    help = 'Automatically imports data and metadata from CSV files in the data folder, clearing previous entries.'
+    help = 'Automatically import data and metadata from CSV files in the data folder, clear previous entries.'
 
     def handle(self, *args, **options):
         base_dir = settings.BASE_DIR
@@ -29,11 +29,11 @@ class Command(BaseCommand):
     def parse_country_data(self, csv_file_path):
         with open(csv_file_path, newline='', encoding='ISO-8859-1') as csvfile:
             reader = csv.DictReader(csvfile)
-            reader.fieldnames = [field.strip() for field in reader.fieldnames]  # Strip spaces from headers
+            reader.fieldnames = [field.strip() for field in reader.fieldnames]   # Strip spaces from headers
 
             for row in reader:
                 if 'Country Code' not in row or not row['Country Code'].strip():
-                    self.stdout.write(self.style.WARNING('Missing "Country Code" in row, skipping.'))
+                    self.stdout.write(self.style.WARNING('Missing "Country Code" in row, skip.'))
                     continue
 
                 country, created = Country.objects.update_or_create(
@@ -65,11 +65,11 @@ class Command(BaseCommand):
     def parse_country_metadata(self, csv_file_path):
         with open(csv_file_path, newline='', encoding='ISO-8859-1') as csvfile:
             reader = csv.DictReader(csvfile)
-            reader.fieldnames = [field.strip() for field in reader.fieldnames]  # Strip spaces from headers
+            reader.fieldnames = [field.strip() for field in reader.fieldnames]   # Strip spaces from headers
 
             for row in reader:
                 if 'Country Code' not in row:
-                    self.stdout.write(self.style.WARNING('Missing "Country Code" in row, skipping metadata entry.'))
+                    self.stdout.write(self.style.WARNING('Missing "Country Code" in row, skip metadata entry.'))
                     continue
                 try:
                     country = Country.objects.get(country_code=row['Country Code'].strip())
@@ -84,4 +84,4 @@ class Command(BaseCommand):
                         }
                     )
                 except ObjectDoesNotExist:
-                    self.stdout.write(self.style.WARNING(f"Country not found for {row['Country Code']}, skipping metadata entry."))
+                    self.stdout.write(self.style.WARNING(f"Country not found for {row['Country Code']}, skip metadata entry."))

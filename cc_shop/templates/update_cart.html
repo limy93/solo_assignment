@@ -3,6 +3,7 @@
 {% load custom_filters %}
 
 {% block content %}
+
 <div class="container mt-4">
     <h2 class="text-center mb-4">Update Your Cart</h2>
     <form action="{% url 'update_cart' %}" method="post">
@@ -43,4 +44,5 @@
         </div>
     </form>
 </div>
+
 {% endblock %}

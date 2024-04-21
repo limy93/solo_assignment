@@ -3,9 +3,10 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
+
 <div class="py-5 text-center">
     <h2>Register</h2>
-    <p class="lead">Create your account to start purchasing carbon credits.</p>
+    <p class="lead">Create your account to start purchasing EcoCredits.</p>
 </div>
 
 <div class="container">
@@ -32,6 +33,7 @@
                         {% endfor %}
                     </div>
                 {% endif %}
+
                 {% for field in form %}
                 <div class="form-group">
                     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -45,9 +47,11 @@
                     {% endif %}
                 </div>
                 {% endfor %}
+
                 <button type="submit" class="btn btn-primary">Register</button>
             </form>
         </div>
     </div>
 </div>
+
 {% endblock %}
