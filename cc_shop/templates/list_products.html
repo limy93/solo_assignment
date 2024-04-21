@@ -1,45 +1,61 @@
 {% extends 'base.html' %}
 
-{% block title %}Browse EcoCredits{% endblock %}
-
 {% block content %}
 
 <div class="container mt-4">
-    <h1 class="text-center mb-4">Available EcoCredits</h1>
-    <div class="row">
-        {% for product in products %}
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 bg-light">
-                <div class="card-body" style="padding: 15px;">
-                    <h5 class="card-title" style="margin-bottom: 0.25rem;">{{ product.country }} EcoCredits</h5>
-                    <p class="card-text">Price: ${{ product.price }}</p>
-                </div>
-
-                <div class="card-footer bg-white">
-                    <div class="d-flex flex-row justify-content-around align-items-center">
-                        <a class="btn btn-secondary mr-2" href="{% url 'product_detail' product.id %}" style="flex: 1; text-align: center; padding: 6px 12px; font-size: 0.9rem;">View Details</a>
-                        <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-flex align-items-center" style="flex: 2;">
+    <h1 class="text-center mb-4">Product List</h1>
+    <div class="card">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th># of Products</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                    <th>Quantity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products_page_obj %}
+                <tr>
+                    <td>{{ start_index|add:forloop.counter0 }}</td>
+                    <td>{{ product.country }} EcoCredits</td>
+                    <td>${{ product.price }}</td>
+                    <td><a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">View Details</a></td>
+                    <td>
+                        <input type="number" name="quantity" value="1" min="1" max="99" class="form-control" style="width: 60px;">
+                    </td>
+                    <td>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <input type="number" name="quantity" value="1" min="1" max="99" class="form-control mr-2" style="width: 60px; flex-shrink: 1; height: 38px; font-size: 0.9rem;">
-                            <button type="submit" class="btn btn-primary" style="flex-grow: 1; padding: 6px 12px; font-size: 0.9rem;">Add to Cart</button>
+                            <button type="submit" class="btn btn-success btn-sm">Add to Cart</button>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No products found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="row justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if products_page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ products_page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item disabled"><a class="page-link" href="#">Page {{ products_page_obj.number }} of {{ products_page_obj.paginator.num_pages }}</a></li>
+                {% if products_page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ products_page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ products_page_obj.paginator.num_pages }}">Last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
 
-{% endblock %}
-
-{% block additional_styles %}
-<style>
-    .card-body {
-        padding: 15px;
-    }
-    .card-title {
-        margin-bottom: 0.25rem;
-    }
-</style>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Count, DecimalField, F, Sum
+from django.db.models import Count, DecimalField, F, Q, Sum
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -40,20 +40,25 @@ def impact(request):
     return render(request, 'impact.html', context)
 
 def register(request):
-    # Check if the user is already logged in
     if request.user.is_authenticated:
         messages.info(request, "You are already registered and logged in.")
-        return redirect('dashboard')   # Redirect them to the dashboard
+        return redirect('dashboard')
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            if user:
+                print("User created successfully:", user.username)
+                login(request, user)
+                print("User logged in:", request.user.is_authenticated)
+            else:
+                print("User not created.")
             return redirect('dashboard')
+        else:
+            print("Form errors:", form.errors)
     else:
         form = RegisterForm()
-
     return render(request, 'registration/register.html', {'form': form})
 
 def logout_page(request):
@@ -64,8 +69,30 @@ def password_reset(request):
     return render(request, 'password_reset.html')
 
 def list_products(request):
-    products = Product.objects.all()
-    return render(request, 'list_products.html', {'products': products})
+    query = request.GET.get('query', '').lower()
+
+    if query:
+        if 'ecocredits' in query:
+            products = Product.objects.all().order_by('id')
+        else:
+            products = Product.objects.filter(country__country_name__icontains=query).order_by('id')  # Added ordering
+    else:
+        products = Product.objects.all().order_by('id')
+    
+    # Pagination
+    paginator = Paginator(products, 20)   # Show 20 products per page
+    page_number = request.GET.get('page')
+    try:
+        products_page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        products_page_obj = paginator.page(1)
+    except EmptyPage:
+        products_page_obj = paginator.page(paginator.num_pages)
+
+    # Calculate the starting index for the current page
+    start_index = (products_page_obj.number - 1) * paginator.per_page + 1
+
+    return render(request, 'list_products.html', {'products_page_obj': products_page_obj, 'start_index': start_index})
 
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
