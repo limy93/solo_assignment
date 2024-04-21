@@ -35,7 +35,7 @@
                                 <td>${{ item.quantity|multiply_and_round:item.product.price }}</td>
                                 <td>
                                     <button type="submit" name="update" value="{{ item.id }}" class="btn btn-success btn-sm">Update</button>
-                                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-warning btn-sm text-white">Remove</a>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger btn-sm text-white">Remove</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -44,8 +44,8 @@
                 </form>
             </div>
             <div class="card-footer text-center bg-light">
-                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
                 <a href="{% url 'list_products' %}" class="btn btn-secondary">Continue Shopping</a>
+                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
             </div>
         </div>
     {% else %}

@@ -37,12 +37,11 @@
             {% endif %}
         </tbody>
     </table>
-    <div class="card-footer text-center bg-light">
+    <div class="card-footer text-center bg-light">    
+        <a href="{% url 'cart_detail' %}" class="btn btn-secondary">Back to Cart</a>
         <form method="get" action="{% url 'make_payment' %}" class="d-inline">
             <button type="submit" class="btn btn-primary">Make Payment</button>
-        </form>        
-        <a href="{% url 'cart_detail' %}" class="btn btn-secondary">Back to Shopping Cart</a>
-        <a href="{% url 'list_products' %}" class="btn btn-warning text-white">Continue Shopping</a>
+        </form>    
     </div>
 </div>
 

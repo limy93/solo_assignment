@@ -2,6 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count, DecimalField, F, Sum
@@ -11,6 +12,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from .forms import LoginForm, ProductForm, RegisterForm
 from .models import Cart, CartItem, ElectricConsumption, Product, Purchase, User
+
+class MyPasswordResetView(auth_views.PasswordResetView):
+    template_name = 'registration/password_reset_form.html'
+    email_template_name = 'registration/password_reset_email.html'
+    subject_template_name = 'registration/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
 
 def home(request):
     return render(request, 'home.html')
@@ -197,16 +204,10 @@ def dashboard(request):
     context = {}
     items_per_page = 5
 
-    # Paginator for purchases
-    purchase_list = Purchase.objects.filter(user=request.user).select_related('product').order_by('-purchase_date')
-    purchase_paginator = Paginator(purchase_list, items_per_page)
-    page_number = request.GET.get('page', 1)
-    purchase_page_obj = purchase_paginator.get_page(page_number)
-    purchase_start_index = (purchase_page_obj.number - 1) * items_per_page + 1
-    context['purchase_page_obj'] = purchase_page_obj
-    context['purchase_start_index'] = purchase_start_index
-
     if request.user.is_superuser:
+        # Fetch purchases for all users if the user is an admin
+        purchase_list = Purchase.objects.select_related('product').order_by('-purchase_date')
+        
         # Calculate total sales and products sold
         total_sales = Purchase.objects.aggregate(
             total_revenue=Sum(F('product__price') * F('quantity'), output_field=DecimalField())
@@ -231,7 +232,17 @@ def dashboard(request):
             'is_admin': True
         })
     else:
+        # Fetch only the logged-in user's purchases if not an admin
+        purchase_list = Purchase.objects.filter(user=request.user).select_related('product').order_by('-purchase_date')
         context['is_admin'] = False
+
+    # Paginator for purchases
+    purchase_paginator = Paginator(purchase_list, items_per_page)
+    page_number = request.GET.get('page', 1)
+    purchase_page_obj = purchase_paginator.get_page(page_number)
+    purchase_start_index = (purchase_page_obj.number - 1) * items_per_page + 1
+    context['purchase_page_obj'] = purchase_page_obj
+    context['purchase_start_index'] = purchase_start_index
 
     return render(request, 'dashboard.html', context)
 
