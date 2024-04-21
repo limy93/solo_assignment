@@ -1,0 +1,10 @@
+Feature: Add Products to Cart
+  As a logged-in user
+  I want to add products to my cart
+  So that I can purchase them later
+
+  Scenario: Adding a product to the cart
+    Given I am logged in
+    And I am on the products page
+    When I add a product to my cart
+    Then the product should be in my cart

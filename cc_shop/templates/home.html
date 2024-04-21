@@ -10,7 +10,7 @@
         <p class="lead">Invest in a sustainable future by purchasing EcoCredits tied to global energy savings.</p>
         <hr class="my-4">
         <p>Join us in supporting renewable energy initiatives and reducing carbon emissions around the world. Each EcoCredit you purchase helps fund energy projects that are making a real difference.</p>
-        <a class="btn btn-primary btn-lg" href="{% url 'list_products' %}" role="button">Browse EcoCredits</a>
+        <a class="btn btn-primary btn-lg" id="browse-button" href="{% url 'list_products' %}" role="button">Browse EcoCredits</a>
     </div>
 
     <div class="row">
@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h2>What are EcoCredits?</h2>
                     <p>EcoCredits represent a measurable reduction in energy consumption or carbon emissions. Each credit is linked to specific energy-saving projects across various countries, contributing directly to their environmental goals.</p>
-                    <p><a class="btn btn-secondary" href="{% url 'about' %}" role="button">Learn More &raquo;</a></p>
+                    <p><a class="btn btn-secondary" id="about-button" href="{% url 'about' %}" role="button">Learn More &raquo;</a></p>
                 </div>
             </div>
         </div>
@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <h2>Our Impact</h2>
                     <p>Discover how the EcoCredits you purchase contribute to significant environmental improvements, from reducing greenhouse gases to supporting renewable energy advancements.</p>
-                    <p><a class="btn btn-secondary" href="{% url 'impact' %}" role="button">View Details &raquo;</a></p>
+                    <p><a class="btn btn-secondary" id="impact-button" href="{% url 'impact' %}" role="button">View Details &raquo;</a></p>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <div class="card-body">
                     <h2>Join Our Community</h2>
                     <p>By registering with us, you become part of a global movement towards energy efficiency and sustainability. Start your journey towards making a lasting impact today!</p>
-                    <p><a class="btn btn-secondary" href="{% url 'register' %}" role="button">Register Now &raquo;</a></p>
+                    <p><a class="btn btn-secondary" id="register-button" href="{% url 'register' %}" role="button">Register Now &raquo;</a></p>
                 </div>
             </div>
         </div>
