@@ -56,27 +56,9 @@ class Purchase(models.Model):
     def __str__(self):
         return f'{self.user.username} purchased {self.quantity} x {self.product.type} for {self.product.country.country_name} at ${self.product.price} each'
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    bio = models.TextField(null=True, blank=True)
-    location = models.CharField(max_length=100, null=True, blank=True)
-    phone_number = models.CharField(max_length=15, null=True, blank=True)
-    # Additional fields can be added here
-
-    def __str__(self):
-        return f"{self.user.username}'s Profile"
-
-# Create or update a Profile automatically whenever a User instance is created or updated
-@receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    else:
-        instance.profile.save()
-
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
-    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    active = models.BooleanField(default=True)
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')

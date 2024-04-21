@@ -11,7 +11,6 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(next_page=reverse_lazy('logout_page')), name='logout'),
     path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('profile/', views.profile, name='profile'),
     path('products/', views.list_products, name='list_products'),
     path('products/<str:product_id>/', views.product_detail, name='product_detail'),
     path('products/purchase/<int:product_id>/', views.purchase_product, name='purchase_product'),
@@ -26,6 +25,12 @@ urlpatterns = [
     path('logout_page/', views.logout_page, name='logout_page'),
     path('checkout/', views.checkout, name='checkout'),
     
+    # Admin product management URLs
+    path('management/products/', views.product_list, name='product_list'),
+    path('management/products/add/', views.add_product, name='add_product'),
+    path('management/products/edit/<int:product_id>/', views.edit_product, name='edit_product'),
+    path('management/products/delete/<int:product_id>/', views.delete_product, name='delete_product'),
+
     # Password reset URLs
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),

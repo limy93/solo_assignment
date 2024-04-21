@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, RegisterForm, ProfileForm  # Assume these forms are defined
+from .forms import LoginForm, RegisterForm, ProductForm
 from .models import Cart, CartItem, ElectricConsumption, Product, Purchase, User
 from django.db.models import Sum, Count, F
 from django.utils import timezone
@@ -25,29 +25,25 @@ def about(request):
     return render(request, 'about.html')
 
 def register(request):
+    # Check if the user is already logged in
+    if request.user.is_authenticated:
+        messages.info(request, "You are already registered and logged in.")
+        return redirect('dashboard')  # Redirect them to the dashboard or a similar appropriate page
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Make sure the import and function call are correct
+            login(request, user)  # Automatically log in the new user
             return redirect('dashboard')
     else:
         form = RegisterForm()
-    return render(request, 'registration/register.html', {'form': form})  # Updated path here
+
+    return render(request, 'registration/register.html', {'form': form})
 
 def password_reset(request):
     # Implementation would go here, typically sending an email
     return render(request, 'password_reset.html')
-
-def profile(request):
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile')
-    else:
-        form = ProfileForm(instance=request.user)
-    return render(request, 'profile.html', {'form': form})
 
 def list_products(request):
     products = Product.objects.all()
@@ -172,7 +168,11 @@ def add_to_cart(request, product_id):
     return redirect('cart_detail')
 
 def cart_detail(request):
-    cart = get_object_or_404(Cart, user=request.user)  # Get the user's cart
+    try:
+        cart = Cart.objects.get(user=request.user, active=True)  # Ensure that 'active' flag is checked if applicable
+    except Cart.DoesNotExist:
+        cart = None  # Optionally create a new cart here if one should always exist
+
     return render(request, 'cart_detail.html', {'cart': cart})
 
 @login_required
@@ -256,9 +256,43 @@ def checkout(request):
     else:
         return render(request, 'checkout.html', {'cart': cart})
 
-@login_required
-def delete_user(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    user.delete()
-    messages.success(request, 'User successfully deleted.')
-    return redirect('dashboard')
+def product_list(request):
+    all_products = Product.objects.all()
+    paginator = Paginator(all_products, 10)
+
+    page_number = request.GET.get('page')
+    try:
+        products = paginator.page(page_number)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    return render(request, 'product_list.html', {'products': products})
+
+def add_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')
+    else:
+        form = ProductForm()
+    return render(request, 'add_product.html', {'form': form})
+
+def edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('product_list')  # Make sure you redirect to the correct URL
+    else:
+        form = ProductForm(instance=product)
+    
+    return render(request, 'edit_product.html', {'form': form})
+
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    product.delete()
+    return redirect('product_list')

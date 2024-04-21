@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Product
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -21,7 +21,7 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Username', max_length=63)
     password = forms.CharField(label='Password', widget=forms.PasswordInput)
 
-class ProfileForm(forms.ModelForm):
+class ProductForm(forms.ModelForm):
     class Meta:
-        model = Profile
-        fields = ['bio', 'location']  # Extend this based on what's in your Profile model
+        model = Product
+        fields = ("country", "price")  # Adjust fields according to what you want to include in the form

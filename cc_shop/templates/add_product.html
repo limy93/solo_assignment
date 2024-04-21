@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4 shadow">
+        <div class="card-header text-center">
+            <h2>Add Product</h2>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </form>
+        </div>
+        <div class="card-footer text-center bg-light">
+            <div class="d-flex justify-content-center align-items-center">
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">Back to Admin Dashboard</a>
+                <div style="width: 10px;"></div> <!-- Adding small space for separation -->
+                <button type="submit" form="productForm" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

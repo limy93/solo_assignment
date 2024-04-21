@@ -9,9 +9,9 @@
             Your Dashboard
         {% endif %}
     </h1>
-    <p class="lead">
+    <p class="lead text-center">
         {% if is_admin %}
-            Welcome to your Admin Dashboard, where you can manage sales data, user activities, and view detailed analytics.
+            Welcome to your Admin Dashboard, where you can manage sales data, user activities, view detailed analytics, and manage products.
         {% else %}
             Welcome to your dashboard, where you can view your recent activity and account details.
         {% endif %}
@@ -46,6 +46,15 @@
                     <p class="card-text">Users actively participating in activities.</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Product Management Section -->
+    <div class="card my-4">
+        <div class="card-header">Manage Products</div>
+        <div class="card-body">
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">View Products</a>
+            <a href="{% url 'add_product' %}" class="btn btn-success">Add Product</a>
         </div>
     </div>
 
@@ -86,8 +95,8 @@
     <div class="pagination">
         <span class="step-links">
             {% if purchase_page_obj.has_previous %}
-                <a href="?page=1">&laquo; First Page</a>
-                <a href="?page={{ purchase_page_obj.previous_page_number }}">Previous Page</a>
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ purchase_page_obj.previous_page_number }}">Previous</a>
             {% endif %}
 
             <span class="current">
@@ -95,8 +104,8 @@
             </span>
 
             {% if purchase_page_obj.has_next %}
-                <a href="?page={{ purchase_page_obj.next_page_number }}">Next Page</a>
-                <a href="?page={{ purchase_page_obj.paginator.num_pages }}">Last Page &raquo;</a>
+                <a href="?page={{ purchase_page_obj.next_page_number }}">Next</a>
+                <a href="?page={{ purchase_page_obj.paginator.num_pages }}">Last &raquo;</a>
             {% endif %}
         </span>
     </div>
@@ -129,7 +138,7 @@
             <span the="step-links">
                 {% if user_page_obj.has_previous %}
                     <a href="?user_page=1">&laquo; First Page</a>
-                    <a href="?user_page={{ user_page_obj.previous_page_number }}">Previous Page</a>
+                    <a href="?user_page={{ user_page_obj.previous_page_number }}">Previous</a>
                 {% endif %}
 
                 <span class="current">
@@ -137,8 +146,8 @@
                 </span>
 
                 {% if user_page_obj.has_next %}
-                    <a href="?user_page={{ user_page_obj.next_page_number }}">Next Page</a>
-                    <a href="?user_page={{ user_page_obj.paginator.num_pages }}">Last Page &raquo;</a>
+                    <a href="?user_page={{ user_page_obj.next_page_number }}">Next</a>
+                    <a href="?user_page={{ user_page_obj.paginator.num_pages }}">Last &raquo;</a>
                 {% endif %}
             </span>
         </div>
