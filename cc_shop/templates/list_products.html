@@ -24,7 +24,7 @@
                     <td>{{ start_index|add:forloop.counter0 }}</td>
                     <td>{{ product.country }} EcoCredits</td>
                     <td>${{ product.price }}</td>
-                    <td><a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm">View Details</a></td>
+                    <td><a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm" id="view-button">View Details</a></td>
                     <td>
                         <input type="number" name="quantity" value="1" min="1" max="99" class="form-control" style="width: 60px;">
                     </td>

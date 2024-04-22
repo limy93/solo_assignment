@@ -1,8 +1,0 @@
-Feature: Listing Products
-  As a visitor or user
-  I want to see a list of available products
-  So that I can choose products to purchase
-
-  Scenario: Viewing the product list
-    Given I am on the products page
-    Then I should see a list of products

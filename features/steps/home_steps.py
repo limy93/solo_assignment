@@ -1,9 +1,9 @@
 from behave import given, when, then
 from selenium.webdriver.common.by import By
 
-@given('I am on the home page')
+@given('I am on the Home page')
 def step_impl(context):
-    context.browser.get('http://127.0.0.1:8000/')   # Make sure this URL is correct for the local development environment
+    context.browser.get('http://127.0.0.1:8000/')
 
 @when('I click on the "Browse EcoCredits" button')
 def step_impl(context):
@@ -31,7 +31,7 @@ def step_impl(context, title):
 
 @then('I should be redirected to the Products page')
 def step_impl(context):
-    assert "Products" in context.browser.title   # Adjust this title to match the countries list page title
+    assert "Products" in context.browser.title
 
 @then('I should be redirected to the About page')
 def step_impl(context):
