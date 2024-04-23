@@ -1,32 +1,46 @@
 from behave import given, when, then
-from django.contrib.auth.models import User
 from django.urls import reverse
-from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-@given('I am logged in')
+@given('I am logged into the application')
 def step_impl(context):
-    # Register the user if not already registered
-    if not User.objects.filter(username='testuser').exists():
-        User.objects.create_user(username='testuser', password='complexpassword123')
+    context.browser.get('http://127.0.0.1:8000/accounts/login/')
+    assert "Login" in context.browser.title
+    
+    # Check for the presence of the Login form
+    WebDriverWait(context.browser, 10).until(
+        EC.presence_of_element_located((By.ID, "id_username"))
+    )
+    
+    # Fill in login details and submit
+    username_input = context.browser.find_element(By.ID, 'id_username')
+    password_input = context.browser.find_element(By.ID, 'id_password')
+    username_input.send_keys('user@example.com')  # Assume you know a valid username
+    password_input.send_keys('securepassword')  # Assume you know the corresponding password
+    context.browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]').click()
 
-    # Proceed with logging in
-    context.browser = webdriver.Chrome()
-    context.browser.get(context.get_url(reverse('login')))
-    context.browser.find_element_by_name('username').send_keys('testuser')
-    context.browser.find_element_by_name('password').send_keys('complexpassword123')
-    context.browser.find_element_by_css_selector('form').submit()
-
-@when('I add a product to my cart')
+@given('I am on the products listing page')
 def step_impl(context):
-    context.browser.find_element_by_name('add_to_cart').click()
+    context.browser.get('http://127.0.0.1:8000/products/')
 
-@then('The product should be in my cart')
+@when('I select a product and add it to my cart')
 def step_impl(context):
-    context.browser.get(context.get_url(reverse('cart_detail')))
-    assert '1 x' in context.browser.page_source
-    context.browser.quit()
+    # Assume that the products are listed and each has an 'Add to Cart' button
+    add_buttons = context.browser.find_elements(By.XPATH, "//button[contains(text(),'Add to Cart')]")
+    if add_buttons:
+        add_buttons[0].click()  # Click the first 'Add to Cart' button found
 
-# Clean up the test user after the test completes
-def after_scenario(context, scenario):
-    if User.objects.filter(username='testuser').exists():
-        User.objects.get(username='testuser').delete()
+@then('the product should appear in my cart')
+def step_impl(context):
+    # Navigate directly to the cart details page
+    cart_url = context.test.live_server_url + reverse('cart_detail')
+    context.browser.get(cart_url)
+
+    # Wait for the page to load (optional, add if needed)
+    context.browser.implicitly_wait(10)  # Wait for up to 10 seconds
+
+    # Check if the product "EcoCredits" appears on the page
+    product_in_cart = context.browser.find_elements(By.XPATH, "//*[contains(text(), 'EcoCredits')]")
+    assert len(product_in_cart) > 0, "Product not found in cart"

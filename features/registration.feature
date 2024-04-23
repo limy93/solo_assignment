@@ -4,7 +4,7 @@ Feature: User Registration
   So that I can perform actions that require authentication
 
   Scenario: Registering a new user
-    Given I am on the registration page
+    Given I am on the Registration page
     When I enter valid registration details
     And I submit the registration form
-    Then I should be registered and logged in
+    Then I should be registered and redirected to the Dashboard page

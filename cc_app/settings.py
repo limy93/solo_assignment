@@ -78,10 +78,12 @@ WSGI_APPLICATION = 'cc_app.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if 'test' in os.sys.argv:
+    EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'   # Mock email backend
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': ':memory:',
+            'ATOMIC_REQUESTS': False,
         }
     }
 else:
