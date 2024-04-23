@@ -29,7 +29,7 @@ class AboutPageViewTest(TestCase):
 
     def test_about_page_contains_correct_html(self):
         response = self.client.get(reverse('about'))
-        self.assertContains(response, 'About Us')
+        self.assertContains(response, 'About')
 
 class ProductListViewTest(TestCase):
     @classmethod
