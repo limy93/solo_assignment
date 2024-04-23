@@ -1,8 +1,8 @@
 from behave import given, when, then
 from django.contrib.auth.models import User
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from uuid import uuid4
 
 @given('I am a registered user')
@@ -30,6 +30,6 @@ def step_impl(context):
     add_button = context.browser.find_element(By.CSS_SELECTOR, 'button[type="submit"]')
     add_button.click()
 
-@then('I should be redirected to the cart detail page and see the product has been added to my cart for later purchase')
+@then('I should be redirected to the cart page and see the product has been added to my cart for later purchase')
 def step_impl(context):
     assert 'Cart' in context.browser.title

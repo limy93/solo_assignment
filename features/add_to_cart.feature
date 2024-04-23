@@ -10,4 +10,4 @@ Feature: Add Products to Cart
   Scenario: Adding a product to the cart from the products listing page
     Given I am on the products listing page
     When I click the "Add to Cart" button for a product
-    Then I should be redirected to the cart detail page and see the product has been added to my cart for later purchase
+    Then I should be redirected to the cart page and see the product has been added to my cart for later purchase

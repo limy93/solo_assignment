@@ -9,5 +9,5 @@ Feature: Listing Products
 
   Scenario: Viewing the product details
     Given I am on the Products page
-    When I click on the "View Details" button to look for more details
+    When I click on the "View Details" button to look for more product details
     Then I should see the details of the selected product

@@ -1,8 +1,8 @@
 import time
 from behave import given, when, then
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 def generate_unique_username(base="testuser"):
     """Generate a unique username using a base name and the current timestamp."""
@@ -16,7 +16,7 @@ def step_impl(context):
 @when('I enter valid registration details')
 def step_impl(context):
     unique_username = generate_unique_username()
-    context.browser.find_element(By.NAME, 'username').send_keys(unique_username)  # Removed quotes around variable
+    context.browser.find_element(By.NAME, 'username').send_keys(unique_username)
     context.browser.find_element(By.NAME, 'email').send_keys(f"{unique_username}@example.com")
     context.browser.find_element(By.NAME, 'password1').send_keys('securepassword123')
     context.browser.find_element(By.NAME, 'password2').send_keys('securepassword123')
@@ -34,6 +34,4 @@ def step_impl(context):
         )
         assert "Dashboard" in context.browser.title
     except Exception as e:
-        print(f"Error occurred: {e}")
-        # Optionally, take a screenshot or log additional details
         raise AssertionError("Dashboard page was not reached after registration.")

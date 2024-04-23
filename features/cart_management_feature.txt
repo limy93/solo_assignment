@@ -1,0 +1,14 @@
+Feature: Update and Remove Products from Cart
+
+  Background:
+    Given an user is registered
+    and the user is logged in
+    And products are added to the cart
+
+  Scenario: Update product quantity in the cart
+    When the user updates the quantity of a product
+    Then the total price of the updated product should be changed to the correct one
+
+  Scenario: Remove product from the cart
+    When the user clicks the remove button for a product
+    Then the product should be removed from the cart

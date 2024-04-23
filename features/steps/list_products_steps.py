@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 def step_impl(context):
     context.browser.get('http://127.0.0.1:8000/products/')
 
-@when('I click on the "View Details" button to look for more details')
+@when('I click on the "View Details" button to look for more product details')
 def step_impl(context):
     ecocredits_button = context.browser.find_element(By.ID, "view-button")
     ecocredits_button.click()
