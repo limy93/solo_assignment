@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-nt4p_a*5vh42^rs*84x$%kc2q4#m5xzr2-zlr(!(ft@doda^0-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'barbarahelena-morningcafe-8000.codio-box.uk']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'barbarahelena-morningcafe-8000.codio-box.uk', 'solo-assignment.onrender.com']
+
+CSRF_TRUSTED_ORIGINS = ['https://solo-assignment.onrender.com']
 
 # Application definition
 
