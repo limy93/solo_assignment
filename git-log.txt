@@ -1,3 +1,6 @@
+* 7d218fd : Updated requirements.txt
+* ed254cc : Updated settings.py
+* a5a8a63 : Added requirements.txt and git-log
 * 118d04f : Added password reset behave test
 * 03eb99e : Added make payment behave test
 * 8c61395 : Updated test_view.py
