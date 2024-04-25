@@ -1,3 +1,5 @@
+* bc9c9c6 : Updated settings.py
+* 6d900ba : Updated requirements.txt
 * 7d218fd : Updated requirements.txt
 * ed254cc : Updated settings.py
 * a5a8a63 : Added requirements.txt and git-log
