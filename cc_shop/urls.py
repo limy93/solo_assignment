@@ -47,7 +47,7 @@ urlpatterns = [
         template_name='registration/password_reset_complete.html'
     ), name='password_reset_complete'),
 
-    # Admin product management URLs
+    # Admin products management URLs
     path('management/products/', views.product_list, name='product_list'),
     path('management/products/add/', views.add_product, name='add_product'),
     path('management/products/edit/<int:product_id>/', views.edit_product, name='edit_product'),

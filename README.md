@@ -33,7 +33,7 @@ Prepare the database and import initial data:
     python3 manage.py import_csv_data   # Import data as products
 
 ### Simulate Data
-Use Faker to generate users and purchases:
+Use Faker to generate users (customers) and purchases:
 
     python3 manage.py populate_data
 
@@ -43,11 +43,18 @@ Create a superuser to access admin features:
     python3 manage.py createsuperuser
 
 ### Start the server
-Launch the application:
+Launch the application locally:
 
     python3 manage.py runserver
 
-Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to view the application and log in as a superuser to access the Django admin panel.
+This starts the Django development server on localhost using the default port 8000. If you need the server accessible from other devices on your network, or if you need to use a different port, run:
+
+    python3 manage.py runserver 0.0.0.0:8000
+
+Replace 8000 with your desired port number as necessary.
+
+### Accessing the Application
+Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) or use an appropriate URL to view the application and log in as a superuser to access the Django admin panel.
 
 ## Testing
 
@@ -75,4 +82,4 @@ This project is created for educational purposes and is not covered under any sp
 
 ## Contact
 
-For queries regarding this project, students should contact their course instructor or utilize the academic resources provided by the educational institution.
+For queries regarding this project, students should contact their course instructors or utilize the academic resources provided by the educational institution.

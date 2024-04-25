@@ -16,17 +16,17 @@ def before_all(context):
     # Configure test database
     settings.DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'test_database'
+        'NAME': ':memory:'
     }
 
     # Initialize and set up the LiveServerTestCase
     context.live_server = LiveServerTestCase()
-    context.live_server.setUpClass()  # Proper setup for live server
-    context.test = context.live_server  # Ensure context.test points to the live server instance
+    context.live_server.setUpClass()
+    context.test = context.live_server
 
     # Set up the WebDriver
     options = Options()
-    options.add_argument('--headless')  # Ensure it runs headless
+    options.add_argument('--headless')
     context.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 def before_scenario(context, scenario):
@@ -47,13 +47,13 @@ def before_scenario(context, scenario):
     if hasattr(context, 'browser'):
         context.browser.quit()
     context.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    context.browser.delete_all_cookies()  # Clear all cookies at the start of each scenario
+    context.browser.delete_all_cookies()   # Clear all cookies at the start of each scenario
 
 def get_url(context, url_name):
     """
     Helper function to get the absolute URL for a given URL name using Django's reverse function.
     """
-    return context.test.live_server_url + reverse(url_name)  # Now it properly uses the live server URL
+    return context.test.live_server_url + reverse(url_name)
 
 def after_scenario(context, scenario):
     """

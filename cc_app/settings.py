@@ -85,7 +85,7 @@ if 'test' in os.sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':test_database:',
+            'NAME': ':memory:',
             'ATOMIC_REQUESTS': False,
         }
     }

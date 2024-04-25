@@ -8,12 +8,17 @@ class Command(BaseCommand):
     help = 'Populate the database with random customers and purchases'
 
     def add_arguments(self, parser):
-        parser.add_argument('-n', '--num', type=int, help='Number of purchases to be created')
+        # Arguments to specify minimum and maximum number of purchases
+        parser.add_argument('-min', '--min_num', type=int, default=10, help='Minimum number of purchases to be created')
+        parser.add_argument('-max', '--max_num', type=int, default=30, help='Maximum number of purchases to be created')
 
     def handle(self, *args, **options):
         fake = Faker()
 
-        num_purchases = options['num'] if options['num'] else 10   # Default to 10 purchases
+        # Generate a random number of purchases within the provided range
+        min_purchases = options['min_num']
+        max_purchases = options['max_num']
+        num_purchases = random.randint(min_purchases, max_purchases)
 
         # Generate random users (customers)
         for _ in range(num_purchases):
