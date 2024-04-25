@@ -1,3 +1,5 @@
+* fc2a98f : Updated report
+* 8f5c922 : Added reprt and readme files
 * bc9c9c6 : Updated settings.py
 * 6d900ba : Updated requirements.txt
 * 7d218fd : Updated requirements.txt
