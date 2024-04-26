@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'barbarahelena-morningcafe-8000.codio-box.uk', 'solo-assignment.onrender.com']
 
-CSRF_TRUSTED_ORIGINS = ['https://solo-assignment.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://solo-assignment.onrender.com', 'https://barbarahelena-morningcafe-8000.codio-box.uk']
 
 # Application definition
 

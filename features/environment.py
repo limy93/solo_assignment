@@ -1,75 +1,70 @@
-import os
-from django.conf import settings
-from django.test import LiveServerTestCase
-from django.urls import reverse
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.options import Options
-
-# Setup Django environment correctly
-os.environ['DJANGO_SETTINGS_MODULE'] = 'cc_app.settings'
+from behave import fixture, use_fixture
+import os, urllib, subprocess
 import django
+from django.shortcuts import resolve_url
+from django.test import selenium
+from django.test.testcases import TestCase
+from django.test.runner import DiscoverRunner
+from django.test.testcases import LiveServerTestCase
+# from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "cc_app.settings"
 django.setup()
 
+# Use the chrome driver specific to your version of Chrome browser and put it in ./driver directory
+# the driver needs to have the full file path, so use one of these options to pass full path to driver
+# swap - uncomment one CHROME_DRIVER line for the other if you get an error about 'context' not found
+# CHROME_DRIVER = os.path.join(os.path.join(os.path.dirname(__file__), 'driver'), 'chromedriver')
+current_dir = os.path.dirname(os.path.realpath(__file__))
+# CHROME_DRIVER = os.path.join(current_dir, 'driver/chromedriver')
+chrome_options = Options()
+# comment out the line below if you want to see the browser launch for tests
+# possibly add time.sleep() if required
+chrome_options.add_argument("--headless")
+chrome_options.add_argument('--no-proxy-server')
+chrome_options.add_argument("--proxy-server='direct://'")
+chrome_options.add_argument("--proxy-bypass-list=*")
+
+# add our browser to the context object so that it can be used in all steps
 def before_all(context):
-    # Configure test database
-    settings.DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:'
-    }
-
-    # Initialize and set up the LiveServerTestCase
-    context.live_server = LiveServerTestCase()
-    context.live_server.setUpClass()
-    context.test = context.live_server
-
-    # Set up the WebDriver
-    options = Options()
-    options.add_argument('--headless')
-    context.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    use_fixture(django_test_runner, context)
+    # browser = webdriver.Chrome(options=chrome_options, executable_path=CHROME_DRIVER)
+    option = webdriver.ChromeOptions()
+    service = webdriver.ChromeService()
+    service = webdriver.ChromeService(service_args=['--disable-build-check'], log_output=subprocess.STDOUT)
+    browser = webdriver.Chrome(options= option, service=service)
+    # browser.set_page_load_timeout(time_to_wait=200)
+    browser.implicitly_wait(0.5)
+    context.browser = browser
 
 def before_scenario(context, scenario):
-    """
-    Setup function to be executed before each scenario.
-    Resets the browser to ensure clean state, including cookies and session data.
-    """
-    if 'django' in scenario.tags:
-        # Reinitialize LiveServerTestCase to ensure a clean state
-        context.live_server = LiveServerTestCase()
-        context.live_server.setUpClass()
-        context.test = context.live_server
-    
-    # Ensure the browser is reinitialized for every scenario, not just those tagged with 'selenium'
-    options = Options()
-    options.add_argument('--headless')
-    # Close existing browser session if it exists
-    if hasattr(context, 'browser'):
-        context.browser.quit()
-    context.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    context.browser.delete_all_cookies()   # Clear all cookies at the start of each scenario
-
-def get_url(context, url_name):
-    """
-    Helper function to get the absolute URL for a given URL name using Django's reverse function.
-    """
-    return context.test.live_server_url + reverse(url_name)
+    context.test = TestCase()
+    context.test.setUpClass()
+    use_fixture(django_test_case, context)
 
 def after_scenario(context, scenario):
-    """
-    Clean up after each scenario.
-    """
-    if 'selenium' in scenario.tags and hasattr(context, 'browser'):
-        context.browser.quit()
-
-    if 'django' in scenario.tags and hasattr(context, 'live_server'):
-        context.live_server.tearDownClass()
+    context.test.tearDownClass()
+    del context.test
 
 def after_all(context):
-    """
-    Final cleanup after all tests have run.
-    """
-    if hasattr(context, 'browser'):
-        context.browser.quit()
-    if hasattr(context, 'live_server'):
-        context.live_server.tearDownClass()
+    context.browser.quit()
+
+@fixture
+def django_test_runner(context):
+    context.test_runner = DiscoverRunner()
+    context.test_runner.setup_test_environment()
+    context.old_db_config = context.test_runner.setup_databases()
+    yield
+    context.test_runner.teardown_databases(context.old_db_config)
+    context.test_runner.teardown_test_environment()
+
+@fixture
+def django_test_case(context):
+    context.test_case = LiveServerTestCase
+    context.test_case.setUpClass()
+    yield
+    context.test_case.tearDownClass()
+    del context.test_case
