@@ -1,28 +1,30 @@
-* fc2a98f : Updated report
-* 8f5c922 : Added reprt and readme files
-* bc9c9c6 : Updated settings.py
-* 6d900ba : Updated requirements.txt
-* 7d218fd : Updated requirements.txt
-* ed254cc : Updated settings.py
-* a5a8a63 : Added requirements.txt and git-log
-* 118d04f : Added password reset behave test
-* 03eb99e : Added make payment behave test
-* 8c61395 : Updated test_view.py
-* 2832e78 : Updated behave tests
-* efb0919 : Added add_to_cart_steps.py
-* 9b78d0a : Back up before remove login required for add to cart function
-* c502569 : Added test for products page
-* 16c21b3 : Added 1 behave test
-* ec6e265 : Done basic tests
-* dcf6d0f : Left testing
-* c019a21 : Back up
-* d3dd53c : To check layout
-* 60cef66 : Settled dashboard issue
-* 815762f : Stopping at dashboard issue
-* 85c6002 : Updated dashboard
-* 8690228 : Updated dashboard
-* 15f6f77 : Set up payment
-* 7324005 : Updated
-* 4452450 : Data import successfully
-* 196f28b : Started
-* 2999004 : Initial commit
+* b250112c : Made the app works on Codio
+* b05d9cf9 : Updated git-log.txt
+* fc2a98f9 : Updated report
+* 8f5c922e : Added reprt and readme files
+* bc9c9c60 : Updated settings.py
+* 6d900ba3 : Updated requirements.txt
+* 7d218fd5 : Updated requirements.txt
+* ed254cce : Updated settings.py
+* a5a8a635 : Added requirements.txt and git-log
+* 118d04fc : Added password reset behave test
+* 03eb99e7 : Added make payment behave test
+* 8c613954 : Updated test_view.py
+* 2832e783 : Updated behave tests
+* efb09196 : Added add_to_cart_steps.py
+* 9b78d0aa : Back up before remove login required for add to cart function
+* c502569a : Added test for products page
+* 16c21b38 : Added 1 behave test
+* ec6e265e : Done basic tests
+* dcf6d0fb : Left testing
+* c019a212 : Back up
+* d3dd53cc : To check layout
+* 60cef66b : Settled dashboard issue
+* 815762f2 : Stopping at dashboard issue
+* 85c60021 : Updated dashboard
+* 86902280 : Updated dashboard
+* 15f6f77b : Set up payment
+* 73240055 : Updated
+* 44524500 : Data import successfully
+* 196f28b9 : Started
+* 29990047 : Initial commit
